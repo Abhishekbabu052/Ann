@@ -1,1 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --card-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7ff 0%, #e6e9ff 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+        
+        .logo h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .alert-success {
+            background-color: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+        
+        .alert-danger {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border-left: 4px solid #ef4444;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            padding: 25px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        h2 {
+            margin: 0 0 20px;
+            color: var(--secondary);
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            color: var(--primary);
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 28px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-success:hover {
+            background-color: #3aa9d6;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #d1146a;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background-color: #e4850f;
+        }
+        
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .book-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .book-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .book-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .book-card:hover .book-image img {
+            transform: scale(1.08);
+        }
+        
+        .book-details {
+            padding: 20px;
+        }
+        
+        .book-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--dark);
+            line-height: 1.3;
+        }
+        
+        .book-author {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        .book-price {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 20px;
+            margin-top: 12px;
+            text-align: right;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .book-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .books-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+                <h1>Books Collection Manager</h1>
+            </div>
+        </header>
 
+        <div class="card">
+            <h2><i class="fas fa-plus-circle"></i> Add New Book</h2>
+            
+            <?php
+            // Database connection
+            $host = "localhost";
+            $user = "root";
+            $password = "";
+            $dbname = "books";
+
+            $conn = mysql_connect($host, $user, $password);
+            mysql_select_db($dbname, $conn);
+
+            // Initialize variables to prevent undefined variable errors
+            $image_tmp = '';
+            $image_path = '';
+
+            // Handle book insertion
+            if (isset($_POST['insert'])) {
+                $image_name = $_FILES['image']['name'];
+                $image_tmp = $_FILES['image']['tmp_name'];
+                $image_path = "uploads/" . $image_name;
+
+                if (move_uploaded_file($image_tmp, $image_path)) {
+                    $name = $_POST['name'];
+                    $author = $_POST['author'];
+                    $publisher = $_POST['publisher'];
+                    $year = $_POST['year'];
+                    $genre = $_POST['genre'];
+                    $language = $_POST['language'];
+                    $pages = $_POST['pages'];
+                    $binding = $_POST['binding'];
+                    $description = $_POST['description'];
+                    $price = $_POST['price'];
+
+                    $query = "INSERT INTO book (image, name, author, publisher, year_of_publish, genre, language, number_of_pages, binding, description, price)
+                              VALUES ('$image_path', '$name', '$author', '$publisher', '$year', '$genre', '$language', '$pages', '$binding', '$description', '$price')";
+                    mysql_query($query);
+                    echo '<div class="alert alert-success"><i class="fas fa-check-circle"></i> Book inserted successfully!</div>';
+                } else {
+                    echo '<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> Failed to upload image.</div>';
+                }
+            }
+
+            // Handle book update
+            if (isset($_POST['update'])) {
+                $id = $_POST['id'];
+                $name = $_POST['name'];
+                $author = $_POST['author'];
+                $publisher = $_POST['publisher'];
+                $year = $_POST['year'];
+                $genre = $_POST['genre'];
+                $language = $_POST['language'];
+                $pages = $_POST['pages'];
+                $binding = $_POST['binding'];
+                $description = $_POST['description'];
+                $price = $_POST['price'];
+                $image_path = $_POST['existing_image'];
+
+                if (!empty($_FILES['image']['name'])) {
+                    $image_name = $_FILES['image']['name'];
+                    $image_tmp = $_FILES['image']['tmp_name'];
+                    $image_path = "uploads/" . $image_name;
+                    move_uploaded_file($image_tmp, $image_path);
+                }
+
+                $update_query = "UPDATE book SET 
+                    image='$image_path',
+                    name='$name',
+                    author='$author',
+                    publisher='$publisher',
+                    year_of_publish='$year',
+                    genre='$genre',
+                    language='$language',
+                    number_of_pages='$pages',
+                    binding='$binding',
+                    description='$description',
+                    price='$price'
+                    WHERE id='$id'";
+                mysql_query($update_query);
+                echo '<div class="alert alert-success"><i class="fas fa-check-circle"></i> Book updated successfully!</div>';
+            }
+
+            // Handle book deletion
+            if (isset($_GET['delete'])) {
+                $id = $_GET['delete'];
+                mysql_query("DELETE FROM book WHERE id = '$id'");
+                echo '<div class="alert alert-danger"><i class="fas fa-trash-alt"></i> Book deleted.</div>';
+            }
+
+            // Fetch all books
+            $result = mysql_query("SELECT * FROM book");
+            ?>
+
+            <form method="POST" action="" enctype="multipart/form-data">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fas fa-image"></i> Upload Image:</label>
+                        <input type="file" name="image" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-book"></i> Name:</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Author:</label>
+                        <input type="text" name="author">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-building"></i> Publisher:</label>
+                        <input type="text" name="publisher">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Year of Publish:</label>
+                        <input type="text" name="year">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Genre:</label>
+                        <input type="text" name="genre">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-language"></i> Language:</label>
+                        <select name="language" required>
+                            <option value="">--Select--</option>
+                            <option value="Malayalam">Malayalam</option>
+                            <option value="English">English</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-file"></i> Number of Pages:</label>
+                        <input type="number" name="pages">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-bookmark"></i> Binding:</label>
+                        <input type="text" name="binding">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-dollar-sign"></i> Price:</label>
+                        <input type="text" name="price">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-align-left"></i> Description:</label>
+                    <textarea name="description"></textarea>
+                </div>
+                
+                <button type="submit" name="insert" class="btn">
+                    <i class="fas fa-plus"></i> Add Book
+                </button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2><i class="fas fa-book"></i> Your Book Collection</h2>
+            
+            <div class="books-grid">
+                <?php 
+                // Reset result pointer to beginning if it exists
+                if ($result) {
+                    mysql_data_seek($result, 0);
+                    while ($row = mysql_fetch_assoc($result)): 
+                ?>
+                    <div class="book-card">
+                        <div class="book-badge"><?php echo $row['language']; ?></div>
+                        <div class="book-image">
+                            <img src="<?php echo $row['image']; ?>" alt="Book Cover">
+                        </div>
+                        
+                        <div class="book-details">
+                            <div class="book-title"><?php echo $row['name']; ?></div>
+                            <div class="book-author">by <?php echo $row['author']; ?></div>
+                            
+                            <div class="book-meta">
+                                <span><i class="fas fa-calendar"></i> <?php echo $row['year_of_publish']; ?></span>
+                                <span><i class="fas fa-tag"></i> <?php echo $row['genre']; ?></span>
+                            </div>
+                            
+                            <div class="book-meta">
+                                <span><i class="fas fa-file"></i> <?php echo $row['number_of_pages']; ?> pages</span>
+                                <span><i class="fas fa-bookmark"></i> <?php echo $row['binding']; ?></span>
+                            </div>
+                            
+                            <div class="book-price">₹<?php echo $row['price']; ?></div>
+                            
+                            <form method="POST" action="" enctype="multipart/form-data" class="edit-form" id="form-<?php echo $row['id']; ?>">
+                                <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                <input type="hidden" name="existing_image" value="<?php echo $row['image']; ?>">
+                                
+                                <div class="form-group">
+                                    <label>Upload Image:</label>
+                                    <input type="file" name="image">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Name:</label>
+                                    <input type="text" name="name" value="<?php echo $row['name']; ?>">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Author:</label>
+                                    <input type="text" name="author" value="<?php echo $row['author']; ?>">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Publisher:</label>
+                                    <input type="text" name="publisher" value="<?php echo $row['publisher']; ?>">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Year:</label>
+                                    <input type="text" name="year" value="<?php echo $row['year_of_publish']; ?>">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Genre:</label>
+                                    <input type="text" name="genre" value="<?php echo $row['genre']; ?>">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Language:</label>
+                                    <select name="language">
+                                        <option value="Malayalam" <?php if ($row['language'] == 'Malayalam') echo 'selected'; ?>>Malayalam</option>
+                                        <option value="English" <?php if ($row['language'] == 'English') echo 'selected'; ?>>English</option>
+                                    </select>
+                                </
